@@ -19,3 +19,8 @@ class Visit(models.Model):
 
     def __str__(self):
         return f'{self.name} - {self.phone}'
+    
+    
+    class Meta:
+        verbose_name = "Запись"
+        verbose_name_plural = "Записи"
