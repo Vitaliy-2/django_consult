@@ -6,6 +6,8 @@ from .models import Visit
 def main(request):
     if request.method == 'POST':
         form = VisitForm(request.POST)
+        # метод is_valid - проверяет все ли поля заполнены корректно,
+        # он сам проверяет валидацию из файла формс, нами написанных методов
         if form.is_valid():
             # Создание и сохранение записи в модели Visit
             Visit.objects.create(
