@@ -16,6 +16,8 @@ class Visit(models.Model):
     comment = models.TextField(blank=True, verbose_name='Комментарий')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     status = models.IntegerField(choices=STATUS_CHOICES, default=0, verbose_name='Статус')
+    master = models.ForeignKey('Master', on_delete=models.CASCADE, verbose_name='Мастер')
+    services = models.ManyToManyField('Service', verbose_name='Услуги')
 
     def __str__(self):
         return f'{self.name} - {self.phone}'
