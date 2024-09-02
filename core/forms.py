@@ -1,33 +1,40 @@
 from tkinter import W
 from django import forms
+from .models import Visit
 import re
 
 
-class VisitForm(forms.Form):
-    name = forms.CharField(label = 'Имя', max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Имя', 'class': 'form-control'}))
-    phone = forms.CharField(label = 'Телефон', max_length=20, widget=forms.TextInput(attrs={'type': 'tel', 'placeholder': 'Номер телефона', 'class': 'form-control'}))
-    comment = forms.CharField(label = 'Комментарий', required=False, widget=forms.Textarea(attrs={'placeholder': 'Комментарий', 'class': 'form-control'}))
-
+class VisitModelForm(forms.ModelForm):
+    # Служебный класс только для параметров. Изолирует переменные, чтобы джанго брал их тут.
+    class Meta:
+        # Ссылка на конкретную модель, с которой связанна форма
+        model = Visit
+        # Поля из модели, которые будут отображаться
+        fields = ['name', 'phone', 'comment', 'master', 'services']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Имя', 'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'type': 'tel', 'placeholder': 'Номер телефона', 'class': 'form-control'}),
+            'comment': forms.Textarea(attrs={'placeholder': 'Комментарий', 'class': 'form-control'}),
+            'master': forms.Select(attrs={'class': 'form-control'}),
+            'services': forms.SelectMultiple(attrs={'class': 'form-control'}),
+        }
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Если форма содержит ошибки, добавляем класс 'is-invalid' к соответствующим полям
-        # Поле с ошибкой приобретает красную рамку и воскл. знак
         for field_name, field in self.fields.items():
             if self.errors.get(field_name):
                 widget_classes = field.widget.attrs.get('class', '')
                 field.widget.attrs['class'] = f'{widget_classes} is-invalid'
 
-    # Валидация данных данных происходит через расширение\переопределене методов
-    # clean_<field_name> например, проверим что каждый элемент имени является строкой
     def clean_phone(self):
-        # self.cleaned_data - словарь с данными, полученными из формы
-        phone = self.cleaned_data.get("phone", '').strip()
-        
-        # Проверяем формат номера +7, 8
-        phone_pattern = r'^(\+7|8)\d{10}$'
+        phone = self.cleaned_data.get('phone', '').strip()
 
+        # Проверяем формат номера телефона: либо +7..., либо 8...
+        phone_pattern = r'^(\+7|8)\d{10}$'
         if not re.match(phone_pattern, phone):
-            raise forms.ValidationError("Номер должен начинаться +7, 8 и далее 10 цифр")
+            raise forms.ValidationError('Номер телефона должен начинаться с +7 или с 8 и содержать 10 цифр после кода страны.')
+
         return phone
     
     def clean_name(self):
@@ -37,3 +44,29 @@ class VisitForm(forms.Form):
             # Поднимаем исключение, которое попадет в контекст шаблона
             raise forms.ValidationError("Имя должно быть строкой")
         return name
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        master = cleaned_data.get('master')
+        selected_services = cleaned_data.get('services')
+
+        if master and selected_services:
+            # Получаем множество услуг, которые предоставляет мастер
+            master_services = set(master.services.values_list('name', flat=True).distinct())
+            
+            # Преобразуем услуги пользователя к множеству для сравнения
+            selected_services_set = set(service.name for service in selected_services)
+
+            # Приводим оба множества к нижнему регистру для страховки
+            master_services = {service.lower() for service in master_services}
+            selected_services_set = {service.lower() for service in selected_services_set}
+            
+            # Проверяем, что мастер предоставляет все выбранные услуги
+            if not selected_services_set.issubset(master_services):
+                # Вычисляем разность множеств, чтобы найти неподдерживаемые услуги
+                unsupported_services = selected_services_set - master_services
+                unsupported_services_str = ', '.join(unsupported_services)
+                self.add_error('services', f"Мастер {master.first_name} {master.last_name} не предоставляет следующие услуги: {unsupported_services_str}.")
+
+        return cleaned_data
+    
