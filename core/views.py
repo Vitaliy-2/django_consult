@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import VisitModelForm
-from .models import Visit, Master
+from .models import Visit, Master, Service
+from django.http import JsonResponse
 
 
 def main(request):
@@ -29,4 +30,10 @@ def main(request):
 
 def thanks(request):
     return render(request, 'thanks.html')
+
+
+def get_services_by_master(request, master_id):
+    services = Master.objects.get(id=master_id).services.all()
+    services_data = [{'id': service.id, 'name': service.name} for service in services]
+    return JsonResponse({'services': services_data})
 
