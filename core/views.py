@@ -6,9 +6,23 @@ from django.http import JsonResponse
 from django.views.generic import View
 
 
+MENU = [
+        {'title': 'Главная', 'url': '/', 'active': True},
+        {'title': 'Мастера', 'url': '#masters', 'active': True},
+        {'title': 'Услуги', 'url': '#services', 'active': True},
+        {'title': 'Отзывы', 'url': '#reviews', 'active': True},
+        {'title': 'Запись на стрижку', 'url': '#orderForm', 'active': True},
+    ]
+
+def get_menu_context(menu: list[dict] = MENU):
+    return {"menu": menu}
+
+
 def main(request):
     # Мастера для карусели фоточек (в форму данные берутся и по мастерам и по услугам автоматически)
     masters = Master.objects.all()
+    menu = get_menu_context()
+
     if request.method == 'POST':
         form = VisitModelForm(request.POST)
         # метод is_valid - проверяет все ли поля заполнены корректно,
@@ -27,7 +41,7 @@ def main(request):
     else:
         form = VisitModelForm()
 
-    return render(request, 'main.html', {'form': form, 'masters': masters})
+    return render(request, 'main.html', {'form': form, 'masters': masters, **menu})
 
 
 class ThanksView(View):
@@ -37,7 +51,7 @@ class ThanksView(View):
     View - базовый класс для создания представлений
     '''
     def get(self, request):
-        return render(request, 'thanks.html')
+        return render(request, 'thanks.html', get_menu_context())
 
 
 def get_services_by_master(request, master_id):
