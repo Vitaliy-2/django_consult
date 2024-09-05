@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import VisitModelForm
 from .models import Visit, Master, Service
 from django.http import JsonResponse
+# Импорт базового View класса
+from django.views.generic import View
 
 
 def main(request):
@@ -28,8 +30,14 @@ def main(request):
     return render(request, 'main.html', {'form': form, 'masters': masters})
 
 
-def thanks(request):
-    return render(request, 'thanks.html')
+class ThanksView(View):
+    ''' 
+    Функция get будет обрабатывать запрос методом get
+    Еще есть post, put (обновить), delete
+    View - базовый класс для создания представлений
+    '''
+    def get(self, request):
+        return render(request, 'thanks.html')
 
 
 def get_services_by_master(request, master_id):
