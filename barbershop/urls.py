@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from core.views import get_services_by_master, ThanksView, MainView
+from core.views import get_services_by_master, MainView, ThanksTemplateView
 from django.conf.urls.static import static
 from django.conf import settings
 # as_view() - говорим чтобы пути смогли воспринимать класс
@@ -8,7 +8,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', MainView.as_view()),
-    path('thanks/', ThanksView.as_view(), name='thanks'),
+    path('thanks/', ThanksTemplateView.as_view(), name='thanks'),
     path("get_services_by_master/<int:master_id>/", get_services_by_master, name="get_services_by_master"),
 ]
 

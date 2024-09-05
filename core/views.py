@@ -2,8 +2,11 @@ from django.shortcuts import render, redirect
 from .forms import VisitModelForm
 from .models import Visit, Master, Service
 from django.http import JsonResponse
-# Импорт базового View класса
-from django.views.generic import View
+# Импорт базового View класса.
+# Базовые view дает возможность распределять методы по логике
+
+# TemplateView - узкоспециализированные вьюшки, эта только для рендера шаблона
+from django.views.generic import View, TemplateView
 
 
 MENU = [
@@ -46,18 +49,29 @@ class MainView(View):
                 {"form": form, "masters": Master.objects.all(), **get_menu_context()},)
 
 
-class ThanksView(View):
-    ''' 
-    Функция get будет обрабатывать запрос методом get
-    Еще есть post, put (обновить), delete
-    View - базовый класс для создания представлений
-    '''
-    def get(self, request):
-        return render(request, 'thanks.html', get_menu_context())
+# class ThanksView(View):
+#     ''' 
+#     Функция get будет обрабатывать запрос методом get
+#     Еще есть post, put (обновить), delete
+#     View - базовый класс для создания представлений
+#     '''
+#     def get(self, request):
+#         return render(request, 'thanks.html', get_menu_context())
 
 
 def get_services_by_master(request, master_id):
     services = Master.objects.get(id=master_id).services.all()
     services_data = [{'id': service.id, 'name': service.name} for service in services]
     return JsonResponse({'services': services_data})
+
+
+# Используется для статичных страниц, где данные особо не меняются
+class ThanksTemplateView(TemplateView):
+    template_name = "thanks.html"
+    
+    # Расширяем метод. Добавляем контекст ключ - меню.
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(get_menu_context())
+        return context
 
