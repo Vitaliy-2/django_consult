@@ -18,30 +18,32 @@ def get_menu_context(menu: list[dict] = MENU):
     return {"menu": menu}
 
 
-def main(request):
-    # Мастера для карусели фоточек (в форму данные берутся и по мастерам и по услугам автоматически)
-    masters = Master.objects.all()
-    menu = get_menu_context()
+class MainView(View):
+    """
+    Метод get - отвечает за запросы GET
+    Есть еще и другие методы, например post, put, delete и т.д.
+    """
+    
+    def get(self, request):
+        menu = get_menu_context()
+        form = VisitModelForm()
+        masters = Master.objects.all()
 
-    if request.method == 'POST':
+        return render(request, "main.html", {"form": form, "masters": masters, **menu})
+    
+
+    def post(self, request):
         form = VisitModelForm(request.POST)
         # метод is_valid - проверяет все ли поля заполнены корректно,
         # он сам проверяет валидацию из файла формс, нами написанных методов
         if form.is_valid():
-            # Сохранение будет быстрее
             form.save()
-            # Перенаправляем на страницу благодарности
-            return redirect('thanks')
-        
+            return redirect("thanks")
+
         # Отдаем заполненную форму с ошибку
         if form.errors:
-            return render(request, "main.html", {"form": form, 'masters': masters})
-        
-        
-    else:
-        form = VisitModelForm()
-
-    return render(request, 'main.html', {'form': form, 'masters': masters, **menu})
+            return render(request, "main.html",
+                {"form": form, "masters": Master.objects.all(), **get_menu_context()},)
 
 
 class ThanksView(View):
