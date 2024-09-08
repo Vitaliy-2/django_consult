@@ -6,7 +6,8 @@ from django.http import JsonResponse
 # Базовые view дает возможность распределять методы по логике
 
 # TemplateView - узкоспециализированные вьюшки, эта только для рендера шаблона
-from django.views.generic import View, TemplateView
+from django.views.generic import View, TemplateView, FormView, CreateView
+from django.urls import reverse_lazy
 
 
 MENU = [
@@ -16,6 +17,7 @@ MENU = [
         {'title': 'Отзывы', 'url': '#reviews', 'active': True},
         {'title': 'Запись на стрижку', 'url': '#orderForm', 'active': True},
     ]
+
 
 def get_menu_context(menu: list[dict] = MENU):
     return {"menu": menu}
@@ -49,16 +51,6 @@ class MainView(View):
                 {"form": form, "masters": Master.objects.all(), **get_menu_context()},)
 
 
-# class ThanksView(View):
-#     ''' 
-#     Функция get будет обрабатывать запрос методом get
-#     Еще есть post, put (обновить), delete
-#     View - базовый класс для создания представлений
-#     '''
-#     def get(self, request):
-#         return render(request, 'thanks.html', get_menu_context())
-
-
 def get_services_by_master(request, master_id):
     services = Master.objects.get(id=master_id).services.all()
     services_data = [{'id': service.id, 'name': service.name} for service in services]
@@ -74,4 +66,26 @@ class ThanksTemplateView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(get_menu_context())
         return context
+    
+
+# класс для отображения форм
+class VisitFormView(FormView):
+    template_name = "visit_form.html"
+    form_class = VisitModelForm
+    success_url = "/thanks/"
+    context = get_menu_context()
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+
+class VisitCreateView(CreateView):
+    template_name = "visit_form.html"
+    model = Visit
+    # fields = ["name", "phone", "comment", "master", "services"] # Мы можем обойтись даже без формы!!!
+    form_class = VisitModelForm
+    # Подтянем url по псевдониму thanks\
+    # Функция для поиска маршрутов по имени (надежный метод)
+    success_url = reverse_lazy("thanks")
 

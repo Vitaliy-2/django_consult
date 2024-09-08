@@ -1,6 +1,26 @@
+"""
+admin/ - админка
+"" - главная страница
+thanks/ - страница благодарности
+get_services_by_master/<int:master_id>/ - получение услуг по мастеру
+visit-form/ - форма записи на услугу CreateView
+
+----
+visits/ - каталог заявок ListView
+visit/1/view/  - детальное представление визита DetailView
+visit/1/edit/ - редактирование визита UpdateView
+visit/1/delete/ - удаление визита DeleteView
+"""
+
 from django.contrib import admin
 from django.urls import path
-from core.views import get_services_by_master, MainView, ThanksTemplateView
+from core.views import (
+    get_services_by_master, 
+    MainView, 
+    ThanksTemplateView, 
+    # VisitFormView,
+    VisitCreateView,
+)
 from django.conf.urls.static import static
 from django.conf import settings
 # as_view() - говорим чтобы пути смогли воспринимать класс
@@ -10,6 +30,7 @@ urlpatterns = [
     path('', MainView.as_view()),
     path('thanks/', ThanksTemplateView.as_view(), name='thanks'),
     path("get_services_by_master/<int:master_id>/", get_services_by_master, name="get_services_by_master"),
+    path('visit-form/', VisitCreateView.as_view(), name='visit-form')
 ]
 
 
