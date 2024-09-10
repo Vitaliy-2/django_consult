@@ -106,3 +106,9 @@ class VisitUpdateView(UpdateView):
     # Функция для поиска маршрутов по имени (надежный метод)
     success_url = reverse_lazy("thanks")
 
+
+class VisitDetailView(DetailView):
+    template_name = "visit_detail.html"
+    model = Visit
+    # Переменная в которую поместятся данные об объекте, из которой можно вытягивать данные в шаблон
+    context_object_name = "visit"

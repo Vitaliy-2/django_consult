@@ -20,7 +20,7 @@ from core.views import (
     ThanksTemplateView, 
     # VisitFormView,
     VisitCreateView,
-    # VisitDetailView,
+    VisitDetailView,
     VisitUpdateView,
 )
 from django.conf.urls.static import static
@@ -34,9 +34,9 @@ urlpatterns = [
     path("get_services_by_master/<int:master_id>/", get_services_by_master, name="get_services_by_master"),
     
     # CRUD для Visit 
-    path('visit-form/', VisitCreateView.as_view(), name='visit-form'),
+    path('visit/add/', VisitCreateView.as_view(), name='visit-form'),
     # Read на DetailView
-    # path("visit/<int:pk>/view/", VisitDetailView.as_view(), name="visit-view"),
+    path("visit/<int:pk>/view/", VisitDetailView.as_view(), name="visit-view"),
     # Update на UpdateView
     path("visit/<int:pk>/edit/", VisitUpdateView.as_view(), name="visit-edit"),
 ]
