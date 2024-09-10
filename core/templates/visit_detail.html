@@ -19,14 +19,14 @@
                         <img src="{{ visit.master.photo.url }}" alt="{{ visit.master.first_name }} {{ visit.master.last_name }}" class="img-fluid mb-3">
                     {% endif %}
                     </p>
-                   
+                    
                     <p class="card-text my-3"><strong>Услуги:</strong></p>
                     <ul>
                         {% for service in visit.services.all %}
                             <li>{{ service.name }}</li>
                         {% endfor %}
                     </ul>
-                    {% comment %} <a href="{% url 'visit-delete' visit.pk %}" class="btn btn-danger my-2">Удалить</a> {% endcomment %}
+                    <a href="{% url 'visit-delete' visit.pk %}" class="btn btn-danger my-2">Удалить</a>
                     <a href="{% url 'visit-edit' visit.pk %}" class="btn btn-dark my-2">Редактировать</a>
                 </div>
             </div>

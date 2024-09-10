@@ -13,6 +13,8 @@ from django.views.generic import (
     CreateView,
     DetailView,
     UpdateView,
+    ListView,
+    DeleteView,
 )
 from django.urls import reverse_lazy
 
@@ -112,3 +114,9 @@ class VisitDetailView(DetailView):
     model = Visit
     # Переменная в которую поместятся данные об объекте, из которой можно вытягивать данные в шаблон
     context_object_name = "visit"
+
+
+class VisitDeleteView(DeleteView):
+    template_name = "visit_confirm_delete.html"
+    model = Visit
+    success_url = reverse_lazy("thanks")
