@@ -15,7 +15,7 @@ visit/1/delete/ - удаление визита DeleteView
 from django.contrib import admin
 from django.urls import path
 from core.views import (
-    get_services_by_master, 
+    ServicesByMasterView, 
     MainView, 
     ThanksTemplateView, 
     # VisitFormView,
@@ -33,7 +33,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', MainView.as_view()),
     path('thanks/', ThanksTemplateView.as_view(), name='thanks'),
-    path("get_services_by_master/<int:master_id>/", get_services_by_master, name="get_services_by_master"),
+    path("get_services_by_master/<int:master_id>/", ServicesByMasterView.as_view(), name="get_services_by_master"),
     
     # CRUD для Visit 
     path('visit/add/', VisitCreateView.as_view(), name='visit-form'),
