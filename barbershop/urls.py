@@ -14,6 +14,11 @@ visit/1/delete/ - удаление визита DeleteView
 
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
+# Импорт include
+from django.conf.urls import include
+
 from core.views import (
     ServicesByMasterView, 
     MainView, 
@@ -25,13 +30,15 @@ from core.views import (
     VisitDeleteView,
     VisitListView,
 )
-from django.conf.urls.static import static
-from django.conf import settings
+
+from user import urls
+
+
 # as_view() - говорим чтобы пути смогли воспринимать класс
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', MainView.as_view()),
+    path('', MainView.as_view(), name='main'),
     path('thanks/', ThanksTemplateView.as_view(), name='thanks'),
     path("get_services_by_master/<int:master_id>/", ServicesByMasterView.as_view(), name="get_services_by_master"),
     
@@ -45,6 +52,8 @@ urlpatterns = [
     path("visit/<int:pk>/delete/", VisitDeleteView.as_view(), name="visit-delete"),
     # ListView
     path("visits/", VisitListView.as_view(), name="visits"),
+    # Подключаем пользователей с префиксом user
+    path("user/", include(urls)),
 ]
 
 
