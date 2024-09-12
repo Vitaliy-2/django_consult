@@ -170,6 +170,7 @@ class VisitListView(ListView):
         return context
 
 
+# Ставим ограничения. Только залогиненые пользвотали имеюю доступ к этой вьшке и классу
 @login_required
 def protected_function_view(request):
     return render(request, 'protected.html', get_menu_context())
