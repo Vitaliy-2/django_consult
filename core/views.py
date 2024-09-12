@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from .forms import VisitModelForm, VisitEditModelForm
-from .models import Visit, Master, Service
+
+from django.urls import reverse_lazy
+from django.db.models import Q
+
 from django.http import JsonResponse
+
 # Импорт базового View класса.
 # Базовые view дает возможность распределять методы по логике
-
 # TemplateView - узкоспециализированные вьюшки, эта только для рендера шаблона
 from django.views.generic import (
     View,
@@ -16,9 +18,13 @@ from django.views.generic import (
     ListView,
     DeleteView,
 )
-from django.urls import reverse_lazy
-from django.db.models import Q
 
+# Для ограничения доступа неавторизованных пользователей
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .forms import VisitModelForm, VisitEditModelForm
+from .models import Visit, Master
 
 MENU = [
         {'title': 'Главная', 'url': '/', 'active': True},
@@ -162,3 +168,13 @@ class VisitListView(ListView):
         if search_query:
             context['search'] = search_query
         return context
+
+
+@login_required
+def protected_function_view(request):
+    return render(request, 'protected.html', get_menu_context())
+
+
+class ProtectedClassView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'protected.html', get_menu_context())

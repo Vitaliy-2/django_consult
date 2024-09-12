@@ -29,6 +29,8 @@ from core.views import (
     VisitUpdateView,
     VisitDeleteView,
     VisitListView,
+    protected_function_view,
+    ProtectedClassView,
 )
 
 from user import urls
@@ -54,6 +56,9 @@ urlpatterns = [
     path("visits/", VisitListView.as_view(), name="visits"),
     # Подключаем пользователей с префиксом user
     path("user/", include(urls)),
+    # Тестовые урлы для проверки прав доступа
+    path("protected-function/", protected_function_view, name="protected-function"),
+    path("protected-class/", ProtectedClassView.as_view(), name="protected-class"),
 ]
 
 
