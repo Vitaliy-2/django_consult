@@ -1,18 +1,11 @@
-from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic.edit import CreateView
-from django.contrib.auth.forms import UserCreationForm
 from django.urls import path
-from .views import login_view, logout_view, register_view
+from .views import logout_view, CustomLoginView, CustomRegisterView
 
 
 urlpatterns = [
-    path('login/', LoginView.as_view(template_name='login.html', next_page='main'), name='login'),
+    path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', logout_view, name='logout'),
-    path('register/', CreateView.as_view(
-        template_name='register.html',
-        form_class=UserCreationForm,
-        success_url='/'
-    ), name='register'),
+    path('register/', CustomRegisterView.as_view(), name='register'),
 ]
 
 
