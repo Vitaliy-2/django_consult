@@ -1,9 +1,9 @@
 from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView
-from django.views.generic import CreateView
-from .forms import CustomLoginForm, CustomUserCreationForm
+from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.views.generic import CreateView, TemplateView
+from .forms import CustomLoginForm, CustomUserCreationForm, CustomPasswordChangeForm
 
 
 class CustomLoginView(LoginView):
@@ -24,3 +24,13 @@ class CustomRegisterView(CreateView):
     form_class = CustomUserCreationForm
     template_name = 'register.html'
     success_url = reverse_lazy('login')
+
+
+class CustomPasswordChangeView(PasswordChangeView):
+    form_class = CustomPasswordChangeForm
+    template_name = 'password_change.html'
+    success_url = reverse_lazy('password_change_done')
+
+
+class CustomPasswordChangeDoneView(TemplateView):
+    template_name = 'password_change_done.html'
