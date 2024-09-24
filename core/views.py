@@ -21,7 +21,7 @@ from django.views.generic import (
 
 # Для ограничения доступа неавторизованных пользователей
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from .forms import VisitModelForm, VisitEditModelForm
 from .models import Visit, Master
@@ -120,7 +120,10 @@ class VisitUpdateView(UpdateView):
     success_url = reverse_lazy("thanks")
 
 
-class VisitDetailView(DetailView):
+class VisitDetailView(PermissionRequiredMixin, DetailView):
+    # Где core - приложение, view - право доступа на одну из круд операцию, visit - модель
+    permission_required = 'core.view_visit'
+    # raise_exception = True
     template_name = "visit_detail.html"
     model = Visit
     # Переменная в которую поместятся данные об объекте, из которой можно вытягивать данные в шаблон
@@ -179,3 +182,13 @@ def protected_function_view(request):
 class ProtectedClassView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'protected.html', get_menu_context())
+
+
+class Custom403View(TemplateView):
+    template_name = '403.html'
+    status_code = 403
+
+
+class Custom404View(TemplateView):
+    template_name = '404.html'
+    status_code = 404

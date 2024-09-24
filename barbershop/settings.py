@@ -169,3 +169,7 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 SERVER_EMAIL = os.getenv('EMAIL_HOST_USER')
 EMAIL_ADMIN = os.getenv('EMAIL_HOST_USER')
+
+
+HANDLER403 = 'core.views.Custom403View.as_view()'
+HANDLER404 = 'core.views.Custom404View.as_view()'
