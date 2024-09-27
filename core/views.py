@@ -120,6 +120,7 @@ class VisitUpdateView(UpdateView):
     success_url = reverse_lazy("thanks")
 
 
+# Миксин, дает проверку прав, выдаваемых через админку
 class VisitDetailView(PermissionRequiredMixin, DetailView):
     # Где core - приложение, view - право доступа на одну из круд операцию, visit - модель
     permission_required = 'core.view_visit'
