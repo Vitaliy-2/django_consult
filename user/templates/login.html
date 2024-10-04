@@ -16,10 +16,18 @@
                 {% comment %} hidden - скрытое поле ввода, которое пользователь не увидит {% endcomment %}
                 <input type="hidden" name="next" value="{{ request.GET.next }}">
                 {{ form.as_p }}
-                <div class="d-grid">
+                <div class="d-grid mb-4">
                     <button type="submit" class="btn btn-primary">Войти</button>
                 </div>
                 </form>
+
+                <form method="post" action="{% url 'password_reset' %}" class="d-inline">
+                    {% csrf_token %}
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary">Восстановить пароль</button>
+                    </div>
+                </form>
+
             </section>
         </div>
     </div>

@@ -31,6 +31,7 @@ from core.views import (
     VisitListView,
     protected_function_view,
     ProtectedClassView,
+    CabinetClassView,
 )
 
 from user import urls
@@ -59,6 +60,7 @@ urlpatterns = [
     # Тестовые урлы для проверки прав доступа
     path("protected-function/", protected_function_view, name="protected-function"),
     path("protected-class/", ProtectedClassView.as_view(), name="protected-class"),
+    path("cabinet/", CabinetClassView.as_view(), name="cabinet"),
 ]
 
 

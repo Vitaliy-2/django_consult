@@ -193,3 +193,8 @@ class Custom403View(TemplateView):
 class Custom404View(TemplateView):
     template_name = '404.html'
     status_code = 404
+
+
+class CabinetClassView(LoginRequiredMixin, View):
+    def post(self, request):
+        return render(request, 'cabinet.html', get_menu_context())
