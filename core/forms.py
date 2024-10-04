@@ -1,4 +1,3 @@
-from tkinter import W
 from django import forms
 from .models import Visit
 import re
