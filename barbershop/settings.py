@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*", "92.53.97.91"]
+ALLOWED_HOSTS = ["*", "92.53.97.91", "vitaliy-2-django-consult-378f.twc1.net"]
 
 
 # Application definition
