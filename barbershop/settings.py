@@ -34,8 +34,7 @@ ALLOWED_HOSTS = ["*", "92.53.97.91", "https://vitaliy-2-django-consult-378f.twc1
 
 CSRF_TRUSTED_ORIGINS = [
     'https://vitaliy-2-django-consult-378f.twc1.net',
-    'http://vitaliy-2-django-consult-378f.twc1.net',
-    'vitaliy-2-django-consult-378f.twc1.net'
+    'http://vitaliy-2-django-consult-378f.twc1.net'
 ]
 
 
